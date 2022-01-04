@@ -32,12 +32,16 @@ namespace ProcessSuspender
         [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
         static extern bool CloseHandle(IntPtr handle);
 
-
-        private static void SuspendProcess(int pid)
+        public static void SuspendProcess(int pid)
         {
             //var proces = Process.GetProcessById(pid); // throws exception if process does not exist
             var processList = Process.GetProcessesByName("GTAV");
             var process = processList.First();
+
+            Console.ForegroundColor = ConsoleColor.Green;
+
+            Console.WriteLine("Process ID: " + process.Id);
+            Console.WriteLine("Process Name: " + process.ProcessName);
 
             foreach (ProcessThread pT in process.Threads)
             {
@@ -48,7 +52,19 @@ namespace ProcessSuspender
                     continue;
                 }
 
-                SuspendThread(pOpenThread);
+                //Check if this works
+                try
+                {
+                    //SuspendProcess(pT.Id);
+                    SuspendThread(pOpenThread);
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Can't suspend process. Details:");
+                    Console.WriteLine(e);
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                }
 
                 CloseHandle(pOpenThread);
             }
@@ -56,7 +72,9 @@ namespace ProcessSuspender
 
         public static void ResumeProcess(int pid)
         {
-            var process = Process.GetProcessById(pid);
+            //var process = Process.GetProcessById(pid);
+            var processList = Process.GetProcessesByName("GTAV");
+            var process = processList.First();
 
             if (process.ProcessName == string.Empty)
                 return;
@@ -77,6 +95,9 @@ namespace ProcessSuspender
                 } while (suspendCount > 0);
 
                 CloseHandle(pOpenThread);
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("The process has been resumed");
             }
         }
     }
