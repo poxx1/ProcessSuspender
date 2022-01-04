@@ -35,7 +35,7 @@ namespace ProcessSuspender
         public static void SuspendProcess(int pid)
         {
             //var proces = Process.GetProcessById(pid); // throws exception if process does not exist
-            var processList = Process.GetProcessesByName("GTAV");
+            var processList = Process.GetProcessesByName("GTA5");
             var process = processList.First();
 
             Console.ForegroundColor = ConsoleColor.Green;
@@ -73,7 +73,7 @@ namespace ProcessSuspender
         public static void ResumeProcess(int pid)
         {
             //var process = Process.GetProcessById(pid);
-            var processList = Process.GetProcessesByName("GTAV");
+            var processList = Process.GetProcessesByName("GTA5");
             var process = processList.First();
 
             if (process.ProcessName == string.Empty)
